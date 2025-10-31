@@ -1,0 +1,50 @@
+RUN_WINDOWS_STEPS - Step-by-step to run on Windows 10
+
+1) Install Python
+   - Download Python 3.10+ from https://www.python.org/downloads/windows/
+   - During installation: check "Add Python to PATH".
+   - Verify: Open PowerShell and run:
+       python --version
+       pip --version
+
+2) Install Npcap (critical for packet capture on Windows)
+   - Download from: https://nmap.org/npcap/
+   - Run the installer and **enable** "WinPcap API-compatible mode" (very important).
+   - Reboot if prompted.
+
+3) Prepare project folder
+   - Extract the provided ZIP or clone this repo.
+   - Open PowerShell **as Administrator** (right-click → Run as Administrator).
+   - Navigate to the project folder, e.g.:
+       cd C:\Users\YourName\Downloads\basic_network_sniffer_windows
+
+4) (Optional) Create a virtual environment
+   - python -m venv venv
+   - .\venv\Scripts\Activate.ps1   # PowerShell
+   - For CMD: .\venv\Scripts\activate.bat
+
+5) Install Python dependencies
+   - pip install -r requirements.txt
+   - If pip install scapy fails, try: pip install scapy==2.5.1
+
+6) List interfaces
+   - Run:
+       python sniffer_scapy.py --list
+   - Note the exact interface name you want to sniff (e.g., "Ethernet", "Wi-Fi", "Ethernet 2")
+
+7) Run the sniffer (examples)
+   - Capture 20 DNS packets:
+       python sniffer_scapy.py -i "Ethernet" -f "udp and port 53" -c 20
+   - Capture forever (press Ctrl+C to stop):
+       python sniffer_scapy.py -i "Wi-Fi"
+   - Capture HTTP (unencrypted) (may be rare):
+       python sniffer_scapy.py -i "Ethernet" -f "tcp port 80"
+
+8) Troubleshooting
+   - PermissionError: Ensure you ran PowerShell/CMD as Administrator and that Npcap is installed.
+   - No packets shown: wrong interface, firewall, VPN, or using wireless interface in managed mode. Try Ethernet or generate traffic (e.g., `ping 8.8.8.8`).
+   - Npcap not installed correctly: reinstall and ensure compatibility mode checked.
+
+9) Notes
+   - `sniffer_raw.py` is provided for Linux/macOS learning purposes only.
+   - Be ethical: do not capture networks you don't have permission to monitor.
